@@ -162,6 +162,23 @@ Example 3:
 Input: head = [1,2], n = 1
 Output: [1]
 
+def removeNthFromEnd(head, n):
+    dummy = ListNode()
+    dummy.next = head
+
+    slow = dummy
+    fast = dummy
+
+    for i in range(n+1):
+        fast = fast.next
+    
+    while fast:
+        slow = slow.next
+        fast = fast.next
+    
+    slow.next = slow.next.next
+    return dummy.next
+
 23) You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
 Merge all the linked-lists into one sorted linked-list and return it.
 
@@ -184,5 +201,45 @@ Output: []
 Example 3:
 Input: lists = [[]]
 Output: []
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not lists:
+            return None
+
+        res = lists[0]
+
+        for i in range(1, len(lists)):
+            res = self.mergeTwoLists(res, lists[i])
+
+        return res
+            
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        dummy = ListNode()
+        curr = dummy
+
+        while list1 and list2:
+            if list2.val >= list1.val:
+                curr.next = list1
+                list1 = list1.next
+            else:
+                curr.next = list2
+                list2 = list2.next
+            
+            curr = curr.next
+        
+        # connecting remaining nodes
+        if list1:
+            curr.next = list1
+        else:
+            curr.next = list2
+        
+        return dummy.next
 
 '''
